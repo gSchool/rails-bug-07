@@ -10,9 +10,7 @@ class TasksController < ApplicationController
     task_params = params.require(:task).permit(:description, :due_date)
     @task = @task_list.tasks.new(task_params)
 
-    if params[:task][:completed]
-      @task.completed = true
-    end
+    @task.completed = params[:task][:completed]
 
     if @task.save
       redirect_to root_path, notice: "Task was created successfully!"

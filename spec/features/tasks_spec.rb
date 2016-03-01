@@ -3,7 +3,7 @@ require 'capybara/rails'
 
 feature 'Tasks' do
 
-  scenario 'User can view tasks' do
+  scenario 'User can add a task marked as complete' do
     user = create_user email: "user@example.com"
     TaskList.create!(name: "Work List")
 
@@ -19,8 +19,22 @@ feature 'Tasks' do
 
     expect(page).to have_content("Something important")
     expect(page).to have_content("Task was created successfully!")
-    expect(page).to have_content("2 days")
+    expect(page).to have_content("1 day")
     expect(page).to have_css(".task.completed")
+  end
+
+  scenario 'User can add a task marked as incomplete' do
+    user = create_user email: "user@example.com"
+    TaskList.create!(name: "Work List")
+
+    login(user)
+    click_on "+ Add Task", match: :first
+    fill_in "Description", with: "Read a book"
+    click_on "Create Task"
+
+    expect(page).to have_content("Read a book")
+    expect(page).to have_content("Task was created successfully!")
+    expect(page).to_not have_css(".task.completed")
   end
 
 end
